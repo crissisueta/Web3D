@@ -5,11 +5,13 @@ const ctx = game.getContext("2d")
 const BACK = "#101010"
 const FORE = "#50FF50"
 const ACC = "#FF5050"
-const linesize = document.getElementById("lineWidth").value;
-const renderV = document.getElementById("vr").checked;
-const movZ = document.getElementById("movZ").valueAsNumber;
-const movX = document.getElementById("movX").valueAsNumber;
-const movY = document.getElementById("movY").valueAsNumber;
+let linesize = document.getElementById("lineWidth").value;
+let renderV = document.getElementById("vr").checked;
+let rot = document.getElementById("rt").checked;
+let movZ = 0;
+let movX = 0;
+let movY = 0;
+
 
 console.log(ctx)
 function clear(){
@@ -42,8 +44,8 @@ function screen(p){
 
 function project({x,y,z}){
     return{
-        x: x/z,
-        y: y/z,
+        x: (x/z)+movX,
+        y: (y/z)+movY,
     }
 }
 
@@ -82,13 +84,28 @@ function translate_z({x,y,z}, dz){
     return {x,y,z: z+ dz}
 }
 
+window.addEventListener('keydown', (e) => {
+        if(e.key === 'w') movZ+=0.1;
+        if(e.key === 's') movZ-=0.1;
+        if(e.key === 'a') movX+=0.1;
+        if(e.key === 'd') movX-=0.1;
+        if(e.key === ' ') movY-=1;
+    });
+
 const FPS = 60;
-let dz = movZ;
+
 let angle = 0;
 function frame(){
     const dt = 1/FPS;
     //dz += 1*dt
-    angle += Math.PI*dt
+    let dz = movZ;
+    if(movY < 0){
+        movY += 0.05;
+    }
+    
+    if(rot){
+        angle += Math.PI*dt
+    }
     clear()
     if (renderV) {
     for (const v of vs){
