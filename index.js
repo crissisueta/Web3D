@@ -5,7 +5,11 @@ const ctx = game.getContext("2d")
 const BACK = "#101010"
 const FORE = "#50FF50"
 const ACC = "#FF5050"
-
+const linesize = document.getElementById("lineWidth").value;
+const renderV = document.getElementById("vr").checked;
+const movZ = document.getElementById("movZ").valueAsNumber;
+const movX = document.getElementById("movX").valueAsNumber;
+const movY = document.getElementById("movY").valueAsNumber;
 
 console.log(ctx)
 function clear(){
@@ -20,7 +24,7 @@ function point({x,y}){
 }
 
 function line(p1,p2){
-    ctx.lineWidth = 2
+    ctx.lineWidth = linesize
     ctx.strokeStyle = FORE
     ctx.beginPath()
     ctx.moveTo(p1.x, p1.y);
@@ -79,16 +83,18 @@ function translate_z({x,y,z}, dz){
 }
 
 const FPS = 60;
-let dz = 2;
+let dz = movZ;
 let angle = 0;
 function frame(){
     const dt = 1/FPS;
     //dz += 1*dt
     angle += Math.PI*dt
     clear()
-    /*for (const v of vs){
+    if (renderV) {
+    for (const v of vs){
         point(screen(project(translate_z(rotate(v,angle), dz))))
-    }*/
+    }
+    }
     for (const f of fs){
         for (let i = 0; i < f.length; i++){
             const a = vs[f[i]];
